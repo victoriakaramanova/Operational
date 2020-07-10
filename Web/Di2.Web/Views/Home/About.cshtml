@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "ЗА НАС";
+}
+
+<main class="site-content">
+    <div class="page-about">
+        <div class="site-wrapper">
+            <section class="infor">
+                <div class="top-image" style="background-image: url('@Url.Content("~/images/variety.jpg")');">
+                </div>
+                <h3>@ViewData["Title"]</h3>
+                <div class="underline"></div>
+                <div class="infor">
+                    <p>
+                        Ди-2 Трейд ЕООД предлага дизайн и печат, както и директна продажба на широка гама етикети и термотрансферни
+                        ленти. Тези етикети са предназначени главно за маркировка и проследяване на продукти във връзка данни за
+                        производство на продуктовата партида, срока на годност, логистична информация за изпращане и т.н.
+                    </p>
+                    <p>
+                        Разполага с широка гама от самозалепващи и несамозалепващи етикети, картонени етикети, билети, фолийни
+                        етикети и
+                        етикети със специално предназначение. Техническата обезпеченост на фирмата позволява графичното създаване и
+                        печатането на етикети от различни материали с разнообразни форми и цветове. Етикетите основно са
+                        предназначени
+                        за използване с баркод принтери, етикетиращи везни, ръчни и автоматични апликатори, Print & Apply системи
+                        др.
+                    </p>
+                    <p>
+                        Важен акцент е предлагането на фолийни етикети: полиетиленови, полипропиленови, полиестерни, защитни VOID
+                        етикети
+                        и др., които намират приложение в електротехниката, електрониката и други сфери на индустрията.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <section class="slider">
+            <div class="slider-brand">
+                <div class="slide-track">
+                    <img src="~/images/logos/bol.png" alt="">
+                    <img src="~/images/logos/CBA-logo.png" alt="">
+                    <img src="~/images/logos/fackelmann-logo.png" alt="">
+                    <img src="~/images/logos/lactima-logo.png" alt="">
+                    <img src="~/images/logos/Megaport-logo.png" alt="">
+                    <img src="~/images/logos/payaka-logo.png" alt="">
+                    <img src="~/images/logos/ZZ_logo.png" alt="">
+                    <img src="~/images/logos/elena.png" alt="">
+
+                    <!-- second circle of the same images for smooth animation -->
+                    <img src="~/images/logos/bol.png" alt="">
+                    <img src="~/images/logos/CBA-logo.png" alt="">
+                    <img src="~/images/logos/fackelmann-logo.png" alt="">
+                    <img src="~/images/logos/lactima-logo.png" alt="">
+                    <img src="~/images/logos/Megaport-logo.png" alt="">
+                    <img src="~/images/logos/payaka-logo.png" alt="">
+                    <img src="~/images/logos/ZZ_logo.png" alt="">
+                    <img src="~/images/logos/elena.png" alt="">
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+@section Scripts{
+    <script>
+        let delay = 3; // Delay animation in seconds
+
+        const sliderWrap = document.querySelector('.slider-container');
+        const slide = sliderWrap.querySelectorAll('input[id="slides_"]');
+        let currentElem = null;
+        let idTimer;
+
+        play();
+
+        function play() {
+            clearInterval(idTimer);
+            idTimer = setInterval(function () {
+                for (let i = 0; i < slide.length; i++) {
+                    if (slide[i].checked == true) {
+                        if (slide[i + 1] != undefined) { slide[i + 1].checked = true; return; }
+                        else { slide[0].checked = true; }
+                    }
+                }
+            }, delay * 1000);
+        }
+
+        sliderWrap.onmouseover = function (event) {
+            clearInterval(idTimer);
+            if (currentElem) { return; }
+
+            let target = event.target;
+
+            while (target != this) {
+                if (target.tagName == 'UL' || target.classList.contains('bullets')) { break; }
+                target = target.parentNode;
+            }
+            if (target == this) { return; }
+            currentElem = target;
+        };
+
+        sliderWrap.onmouseout = function (event) {
+            if (!currentElem) { return; }
+
+            let relatedTarget = event.relatedTarget;
+            if (relatedTarget) {
+                while (relatedTarget) {
+                    if (relatedTarget == currentElem) { return; }
+                    relatedTarget = relatedTarget.parentNode;
+                }
+            }
+            play();
+            currentElem = null;
+        };
+    </script>
+}
+

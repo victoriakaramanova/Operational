@@ -1,0 +1,13 @@
+﻿@using Di2.Web.ViewModels.Categories.ViewModels
+@model IEnumerable<CategoryViewModel>
+
+@using Di2.Common
+@{
+    this.ViewData["Title"] = "List All Categories";
+}
+
+@foreach (var category in Model)
+{
+    <h3>@category.Name</h3>
+    <h5>@category.UserUsername</h5>
+}

@@ -1,0 +1,20 @@
+﻿@using Di2.Common
+
+@{
+    this.ViewData["Title"] = "Upload files";
+}
+<div class="text-center">
+    <h1 class="display-5">@this.ViewData["Title"]</h1>
+</div>
+
+@foreach (var item in this.ViewBag.Links)
+{
+    <img src="@item" />
+}
+
+<img src="https://res.cloudinary.com/stopify-cloud-v/image/upload/v1583790438/Di2pix/id2wna2cglwgxxjp7sdb.jpg" />
+
+<form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="Upload">
+    <input type="file" name="files" multiple>
+    <button type="submit" value="Upload" />
+</form>

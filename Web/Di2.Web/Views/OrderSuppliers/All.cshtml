@@ -1,0 +1,76 @@
+﻿@using Di2.Web.ViewModels.OrderSuppliers
+@model IEnumerable<OrderSupplierViewModel>
+
+@{
+    this.ViewData["Title"] = "Преглед на поръчки";
+}
+
+<div class="text-center">
+    <h2 class="display-3">@this.ViewData["Title"]</h2>
+</div>
+<hr />
+
+@for (int i = 0; i < Model.ToList().Count; i++)
+{
+
+    @Model.ToList()[i].Material.Name
+    @Model.ToList()[i].Material.Description
+    <time datetime="@Model.ToList()[i].OrderDate.ToString("O")">@Model.ToList()[i].OrderDate.ToString("dd.MM.yyyy HH:mm")</time>
+    @Model.ToList()[i].Supplier.Name
+    @Model.ToList()[i].UnitPrice
+    @Model.ToList()[i].Quantity
+    @Model.ToList()[i].TotalPrice
+    <form id="checkForm-@i" method="post"></form>
+    <div class="v-switcher-wrapper" style="margin:5px;">
+        <input type="range" id="switcher-@i"
+               name="switcher-@i" class="@Model.ToList()[i].SwitchValue"
+               min="-1" max="1" step="1" value="@Model.ToList()[i].StatusId.ToString()"
+               onchange="sendStatus(@Model.ToList()[i].Id,@i)" />
+    </div>
+    <div id="statusId-@i">@Model.ToList()[i].Status</div>
+
+}
+
+@section Scripts {
+    <script>
+
+        function sendStatus(orderId, i) {
+            var token = $(`#checkForm-${i} input[name = __RequestVerificationToken]`).val();
+            let myInput = Number($(`#switcher-${i}`).val());
+            //debugger
+            switch (myInput.toString()) {
+                case '-1': $(`#switcher-${i}`).removeClass();
+                    $(`#switcher-${i}`).addClass('v-switcher v-switcher-mode--tri v-switcher-state--passive');
+                    break;
+                case '0': $(`#switcher-${i}`).removeClass();
+                    $(`#switcher-${i}`).addClass('v-switcher v-switcher-mode--tri v-switcher-state--neutral');
+                    // $(`#switcher-${i}`)["disabled" = true];
+                    break;
+                case '1': $(`#switcher-${i}`).removeClass();
+                    $(`#switcher-${i}`).addClass('v-switcher v-switcher-mode--tri v-switcher-state--active');
+                    break;
+            }
+            var json = { orderId: orderId, i: i, isCompleted: myInput };
+            //debugger
+            $.ajax({
+                url: "/api/totals",
+                type: "POST",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    //debugger
+                    if (data.toString() == 1) {
+                        $(`#statusId-${i}`).html("Sent")
+                    } else if (data.toString() == -1) {
+                        $(`#statusId-${i}`).html("Canceled")
+                    }
+                    else $(`#statusId-${i}`).html("Completed");
+                }
+            });
+        }
+    </script>
+
+}
+

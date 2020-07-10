@@ -1,0 +1,33 @@
+﻿@model Di2.Web.ViewModels.CustomerMessages.CustomerMessagesComponentViewModel
+
+<style>
+   
+
+</style>
+<div class="">
+    <div class="u-heading-v2-3--bottom g-brd-primary g-mb-10">
+        <h3 class="h4 g-color-black mb-0">Последни съобщения</h3>
+    </div>
+
+    @foreach (var message in this.Model.CustomerMessages)
+    {
+        <article class="media g-mb-10">
+            <div class="media-body">
+                <ul class="u-list-inline g-font-size-12 g-color-gray-dark-v4">
+                    <li class="list-inline-item">
+                        @message.Email
+                    </li>
+                    <li class="list-inline-item">
+                        <time datetime="@message.CreatedOn.ToString("O")">@message.CreatedOn.ToString("dd.MM.yyyy HH:mm")</time>
+                    </li>
+                    <li class="list-inline-item">
+                        @message.Subject
+                    </li>
+                    <li class="list-inline-item">
+                        @Html.Raw(@message.Content)
+                    </li>
+                </ul>
+            </div>
+        </article>
+    }
+</div>

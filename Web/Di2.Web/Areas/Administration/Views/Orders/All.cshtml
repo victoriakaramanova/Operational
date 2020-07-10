@@ -1,0 +1,133 @@
+﻿@using Di2.Web.ViewModels.Orders.ViewModels
+@model ListCompleteViewModel
+@{
+    ViewData["Title"] = "Общо поръчки";
+}
+
+@if (Model.Orders.Count == 0)
+{
+    <h3 class="text-center text-primary">Няма поръчки</h3>
+}
+
+else
+{
+<div id="orders" class="text-dark">
+    <div class="row mt-1">
+        <h6 class="col-md-1 text-left">Продукт</h6>
+        <h6 class="col-md-1 text-left">Брой</h6>
+        <h6 class="col-md-1 text-left">Единична цена</h6>
+        <h6 class="col-md-1 text-left">Крайна цена</h6>
+        <h6 class="col-md-1 text-left">Клиент</h6>
+        <h6 class="col-md-1 text-left">Поръчка №</h6>
+        <h6 class="col-md-1 text-left">Направена</h6>
+        <h6 class="col-md-1 text-left">Шаблон</h6>
+        <h6 class="col-md-1 text-left">Статус</h6>
+        <h6 class="col-md-1 text-left">Разписка №</h6>
+        <h6 class="col-md-1 text-left">Дата на статуса</h6>
+        @*<h6 class="col-md-1 text-left">СтатусКод</h6>*@
+    </div>
+    @*<form asp-controller="Orders" asp-action="AdminComplete" method="post">*@
+    @for (int i = 0; i < Model.Orders.Count; i++)
+    {
+        @*<input type="hidden" asp-for="@this.Model.Orders[i].Id" />*@
+<div class="order row">
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].MaterialName
+    </div>
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].Quantity
+    </div>
+    @*<div class="col-md-1 text-left">
+        <input type="number" asp-for="@Model.Orders[i].Quantity" style="border:none; width:100%;background-color: rgba(70, 35, 122, 0.1)" onchange="sendQty()" />
+        <span asp-validation-for="@Model.Orders[i].Quantity" class="text-danger"></span>
+        <h6 class="col-md-1 text-left">
+        </h6>
+        </div>*@
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].AvgPrice
+    </div>
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].TotalPrice
+    </div>
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].Orderer.UserName
+    </div>
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].Id
+    </div>
+    <div class="col-md-1 text-left">
+        @Model.Orders[i].IssuedOn
+    </div>
+    @foreach (var pic in @Model.Orders[i].Pictures)
+    {
+        <div class="col-md-1 text-left">
+            <img class="img-thumbnail product-cart-image"
+                 src="@pic.Url" />
+        </div>
+    }
+    <form id="checkForm-@i" method="post"></form>
+    @*<div class="col-md-1 text-left">*@
+    <div class="v-switcher-wrapper" style="margin:3px;">
+        <input type="range" id="switcher-@i"
+               name="switcher-@i" class="@Model.Orders[i].SwitchValue"
+               min="-1" max="1" step="1" value="@Model.Orders[i].StatusId.ToString()"
+               onchange="sendStatus('@Model.Orders[i].Id',@i)" />
+    </div>
+    @* </div> *@
+    <div class="col-md-1 text-left" id="statusId-@i">@Model.Orders[i].ReceiptId</div>
+    <div class="col-md-1 text-left">@Model.Orders[i].ModifiedOn</div>
+    <form asp-controller="Orders" asp-action="Delete" asp-route-id="@Model.Orders[i].Id" method="get">
+        <input type="submit" class="btn btn-danger" value="Изтрий" />
+    </form>
+</div>
+    }
+
+    @*<hr class="hr-4 bg-info" />*@
+
+    <hr class="hr-2 bg-light">
+
+    <h2 class="text-dark text-right" id="total-price">ОБЩО: @Model.Orders.Sum(x => x.AvgPrice * (decimal)x.Quantity).ToString("F2")</h2>
+</div>
+}
+@section Scripts {
+    <script>
+        function sendStatus(orderId, i) {
+            var token = $(`#checkForm-${i} input[name = __RequestVerificationToken]`).val();
+            let myInput = Number($(`#switcher-${i}`).val());
+            debugger
+            switch (myInput.toString()) {
+                case '-1': $(`#switcher-${i}`).removeClass();
+                    $(`#switcher-${i}`).addClass('v-switcher v-switcher-mode--tri v-switcher-state--passive');
+                    break;
+                case '0': $(`#switcher-${i}`).removeClass();
+                    $(`#switcher-${i}`).addClass('v-switcher v-switcher-mode--tri v-switcher-state--neutral');
+                    // $(`#switcher-${i}`)["disabled" = true];
+                    break;
+                case '1': $(`#switcher-${i}`).removeClass();
+                    $(`#switcher-${i}`).addClass('v-switcher v-switcher-mode--tri v-switcher-state--active');
+                    break;
+            }
+            var json = { orderId: orderId, isCompleted: myInput };
+            debugger
+            $.ajax({
+                url: "/api/administration/totalsc",
+                type: "POST",
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                headers: { 'X-CSRF-TOKEN': token },
+                success: function (data) {
+                    debugger
+                    if (data.toString() == "1") {
+                        $(`#statusId-${i}`).html("Sent")
+                    } else if (data.toString() == -1) {
+                        $(`#statusId-${i}`).html("Canceled")
+                    }
+                    else $(`#switcher-${i}`).val("0");
+                }
+            });
+        }
+    </script>
+}
+
+

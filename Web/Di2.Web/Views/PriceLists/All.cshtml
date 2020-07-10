@@ -1,0 +1,15 @@
+﻿@using Di2.Web.ViewModels.PriceLists.ViewModels
+@model IEnumerable<PriceListViewModel>
+
+@using Di2.Common
+@{
+    this.ViewData["Title"] = "List All Price Lists";
+}
+
+@foreach (var item in Model)
+{
+    <div>
+        <h4>@item.Material.Name</h4>
+        <p>@item.Supplier.Name @item.MinimumQuantityPerOrder @item.UnitPrice</p>
+    </div>
+}

@@ -1,0 +1,16 @@
+﻿@using Di2.Web.ViewModels.SubCategories.ViewModels
+@model IEnumerable<SubCategoriesViewModel>
+
+@using Di2.Common
+@{
+    this.ViewData["Title"] = "List All SubCategories";
+}
+
+@foreach (var subCategory in Model)
+{
+    <h3>@subCategory.Name</h3>
+    <h5>@subCategory.Description</h5>
+    <h5>@subCategory.Category</h5>
+    <h5>@subCategory.UserUsername</h5>
+    <time datetime="@subCategory.CreatedOn.ToString("O")">@subCategory.CreatedOn.ToString("dd.MM.yyyy HH:mm")</time>
+}

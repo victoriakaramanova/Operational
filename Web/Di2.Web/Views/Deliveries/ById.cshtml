@@ -1,0 +1,162 @@
+﻿@using Di2.Common
+@*@model Di2.Web.ViewModels.Deliveries.ProductViewModel*@
+@model Di2.Web.ViewModels.Categories.ViewModels.CategoryProductsViewModel
+@{
+    this.ViewData["Title"] = "Детайли за продукта";
+}
+
+<style>
+    input {
+        padding: 0;
+        margin: 0;
+    }
+
+    .product-img figure img {
+        min-width: 50%;
+        max-width: 100%;
+        vertical-align: middle;
+        align-content: center;
+    }
+
+    .primary-btn {
+        color: #fff;
+        display: inline-block;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 16px 40px;
+        width: 173px;
+        border: 2px solid #EEF1F2;
+        border-radius: 50px;
+        text-transform: uppercase;
+    }
+
+    .product-content .product-quantity .pro-qty {
+        height: 56px;
+        width: 173px;
+        border: 2px solid #EEF1F2;
+        border-radius: 50px;
+        text-align: center;
+    }
+
+        .product-content .product-quantity .pro-qty input {
+            width: 50px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 700;
+            height: 100%;
+        }
+
+    .product-content .pc-btn {
+        border-color: #D0D7DB;
+        color: #4a4a4a;
+    }
+
+    .dropzone-container {
+        width: 100%;
+    }
+
+    .dropzone-drop-area {
+        background-color: lightcyan;
+        border: dashed 3px grey;
+        width: 450px;
+        min-height: 150px;
+        box-sizing: border-box;
+        padding: 6px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .dropzone-drop-area:hover {
+            background-color: darkorange;
+            border: dashed 3px black;
+        }
+</style>
+
+<form asp-controller="Deliveries" asp-action="Order" method="post" id="placeOrder" enctype="multipart/form-data">
+    <section class="product-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-img">
+                        <figure>
+                            <img src="@Model.Image" />
+                        </figure>
+                    </div>
+                    @if (Model.CategoryId == 1)
+                    {
+                        <input type="file" asp-for="@Model.PicturesFormFiles" id="picturesFormFiles" name="picturesFormFiles" onchange="trigger()" class="form-control" multiple />
+                        @*<span asp-validation-for="Image" class="text-danger"></span>*@
+                    }
+                    
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-content">
+                        @*<label asp-for="@Model.MaterialName"></label>*@
+                        <h4><input asp-for="@Model.MaterialName" style="border:none; width: 20em;padding:0px;overflow:visible!" readonly="readonly" /></h4>
+                        @*<label asp-for="@Model.Description"></label>*@
+                        <p><input asp-for="@Model.Description" style="border:none; padding:0px" readonly="readonly" /></p>
+                        @*<label asp-for="@Model.ExtraInfo"></label>*@
+                        <p><input asp-for="@Model.ExtraInfo" style="border:none" readonly="readonly" /></p>
+                        <label asp-for="@Model.SubCategoryName"></label>
+                        <p><input asp-for="@Model.SubCategoryName" style="border:none; padding:0px;width: 30em;overflow:visible!" readonly="readonly" /></p>
+                        @* @Model.Cost*@
+                        <label asp-for="@Model.AvgPrice"></label>
+                        <h5><input asp-for="@Model.AvgPrice" id="price" style="border:none" readonly="readonly" /></h5>
+                        <h4 id="total">Сума: @Model.AvgPrice.ToString("F2")</h4>
+                        <input type="hidden" name="MaterialId" value="@Model.MaterialId" />
+                        <div class="product-quantity" style="display:inline-block;margin-right:10px">
+                            <div class="pro-qty">
+                                @*<label asp-for="@Model.Quantity"></label>*@
+                                <input class="qtybtn" name="Quantity" id="Quantity" type="number" value="1" onchange="sendQty()" />
+                                <span asp-validation-for="Quantity" class="text-danger"> </span>
+                            </div>
+                        </div>
+                        @*<a href="#" class="primary-btn pc-btn">Добави</a>*@
+                        <input type="submit" class="primary-btn pc-btn" value="Добави" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+@section Scripts{
+    <script>
+        function trigger() {
+            let totalPrice = 0;
+            let qty = +$('#Quantity').val();
+            let price = +$('#price').val();
+            if ($('#picturesFormFiles').get(0).files.length > 0) {
+                //price = (price * 1.12).toFixed(2);
+                +$('#price').val((price * 1.12).toFixed(2));
+
+                totalPrice = (qty * price * 1.12);
+
+                $('#total').text('Сума: ' + totalPrice.toFixed(2));
+            }
+        }
+
+        function sendQty() {
+            //debugger;
+            let totalPrice = 0;
+            let qty = +$('#Quantity').val();
+            let price = +$('#price').val();
+            
+                //totalPrice = (qty * price).toFixed(2);
+
+                totalPrice = (qty * price);
+
+            $('#total').text('Сума: ' + totalPrice.toFixed(2));
+        }
+    </script>
+
+}

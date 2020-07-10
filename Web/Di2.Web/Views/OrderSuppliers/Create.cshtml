@@ -1,0 +1,56 @@
+﻿@using Di2.Web.ViewModels.PriceLists.ViewModels
+@using System.Linq
+@model Di2.Web.ViewModels.OrderSuppliers.OrderSuppliersListViewModel
+@{
+    this.ViewData["Title"] = "Поръчка на материали";
+}
+<h1 class="display-3">@this.ViewData["Title"]</h1>
+
+<style>
+    form input {
+        border: none;
+    }
+</style>
+
+<form method="post" asp-action="Create">
+    <div class="order">
+        @for (int i = 0; i < Model.Pricelists.Count; i++)
+        {
+        <div class="order_row">
+            <input asp-for="@Model.Pricelists[i].Material.Name"/>
+            <input asp-for="@Model.Pricelists[i].Supplier.Name" />
+            <input asp-for="@Model.Pricelists[i].MinimumQuantityPerOrder" />
+            <input asp-for="@Model.Pricelists[i].UnitPrice" />
+            @*<input class="unitPrice" asp-for="@Model.Pricelists[i].UnitPrice" />*@
+
+            <input type="datetime" asp-for="@Model.OrderSub[i].OrderDate" value="@Model.OrderSub[i].OrderDate.ToShortDateString()"/>
+            @* @Html.TextBoxFor(x=>x.OrderSub[i].Quantity, new { placeholder = $"{Model.Pricelists[i].MinimumQuantityPerOrder}" })*@
+
+            @*<input class="qty" onchange="sendQty()" asp-for="@Model.OrderSub[i].Quantity" />
+        <span asp-validation-for="@Model.OrderSub[i].Quantity" class="text-danger"></span>*@
+
+            <input type="number" asp-for="@Model.OrderSub[i].Quantity" placeholder="@Model.Pricelists[i].MinimumQuantityPerOrder" class="qty" onchange="sendQty()" />
+
+        </div>
+        }
+    </div>
+    <hr />
+    <h3 id="bigTotal">Общо:</h3>
+    <input type="submit" class="btn btn-primary" />
+</form>
+
+@section Scripts {
+    <script>
+        function sendQty() {
+            let bigTotal = 0;
+            //debugger;
+            let orders = Array.from($('.order .order_row'));
+            for (let order of orders) {
+                let domUnitPrice = +$($(order).children()[3]).val();
+                let domQty = +$($(order).children()[5]).val(); 
+                bigTotal += domQty * domUnitPrice;
+            }
+            $('#bigTotal').text('Total: ' + bigTotal.toFixed(2));
+        }
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿@using Di2.Web.ViewModels.Materials.ViewModels
+@model IEnumerable<MaterialsViewModel>
+
+@using Di2.Common
+@{
+    this.ViewData["Title"] = "List All Materials";
+}
+
+@foreach (var item in Model)
+{
+    <h3>@item.Name</h3>
+    <h5>@item.Description</h5>
+
+    <h5>@item.ExtraInfo</h5>
+    @*<i class="fas fa-user-edit"></i>*@
+    <h5>@item.UserUserName</h5>
+   <img src="@item.Image" alt="materialImg" class="img-fluid max-width: 20%" />
+    <h6>@item.SubCategoryName</h6>
+    <h6>@item.Category.Name</h6>
+}
+

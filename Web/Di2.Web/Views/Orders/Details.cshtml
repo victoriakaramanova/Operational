@@ -1,0 +1,72 @@
+﻿@model Di2.Web.ViewModels.Orders.ViewModels.ReceiptViewModel
+
+@{
+    ViewData["Title"] = "Детайли за поръчката";
+}
+
+<div class="finish-order-holder w-50 mx-auto d-flex justify-content-between">
+    <div class="form-holder w-25">
+        <h5 class="text-left">Разписка №</h5>
+    </div>
+    <div class="price-holder w-75 text-right">
+        @Model.Id
+    </div>
+</div>
+
+<hr class="hr-2 bg-dark w-100">
+<div class="products-holder w-50 mx-auto">
+    @foreach (var order in Model.Orders)
+    {
+        <div class="product d-flex justify-content-between">
+            <div class="product-name w-25">
+                <h5>@order.MaterialName</h5>
+            </div>
+            <div class="product-quantity-and-price d-flex justify-content-between w-75">
+                <h5>@order.Id</h5>
+                <h5 class="text-left">@order.Quantity</h5>
+                <h5>@order.AvgPrice</h5>
+            </div>
+        </div>
+    }
+</div>
+
+<hr class="hr-2 bg-dark w-100">
+<div class="finish-order-holder w-50 mx-auto d-flex justify-content-between">
+    <div class="form-holder w-25">
+        <h3 class="text-left">Общо</h3>
+    </div>
+    <div class="price-holder w-50 text-right">
+        @Model.Orders.Sum(x => x.AvgPrice * (decimal)x.Quantity).ToString("F2")
+    </div>
+</div>
+<hr class="hr-2 bg-dark w-100">
+<div class="finish-order-holder w-50 mx-auto d-flex justify-content-between">
+    <div class="form-holder w-25">
+        <h3 class="text-left">Издадена на</h3>
+    </div>
+    <div class="price-holder w-25 text-right">
+        <time datetime="@Model.IssuedOn.ToString("O")">@Model.IssuedOn.ToString("dd.MM.yyyy HH:mm")</time>
+    </div>
+    <div class="form-holder w-auto">
+        <h3 class="text-left">Адрес за доставка</h3>
+    </div>
+    <div class="form-holder w-auto">
+        @Model.DeliveryAddress
+    </div>
+</div>
+
+@*<input type="text" value="@Model.Orders.Select(x=>x.Orderer.Address).FirstOrDefault()" />*@
+<div class="finish-order-holder w-50 mx-auto d-flex justify-content-between">
+    <div class="form-holder w-25">
+        <h3 class="text-left">Получател</h3>
+    </div>
+    <div class="price-holder w-75 text-right">
+        @Model.RecipientName
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/moment/min/moment-with-locales.min.js" asp-append-version="true"></script>
+}
+
+

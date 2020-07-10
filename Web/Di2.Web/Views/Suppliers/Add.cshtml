@@ -1,0 +1,34 @@
+﻿@using Di2.Common
+@{
+    this.ViewData["Title"] = "Add Supplier";
+}
+@model Di2.Web.ViewModels.Suppliers.InputModels.CreateSupplierInputModel
+
+<div class="container-fluid">
+    <form asp-controller="Suppliers" asp-action="Add">
+
+       @* <div asp-validation-summary="All"></div>*@
+
+        <div class="form-group col-md-6">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Address"></label>
+            <input asp-for="Address" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label asp-for="Phone"></label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Submit" />
+    </form>
+</div>

@@ -1,0 +1,32 @@
+﻿@model Di2.Web.ViewModels.PriceLists.InputModels.CreatePriceListInputModel
+
+@{
+    ViewData["Title"] = "Създаване на ценова листа - материал - доставчик";
+    var materials = Model.Materials.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var suppliers = Model.Suppliers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+
+<form asp-controller="PriceLists" asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="MaterialId"></label>
+        <select asp-for="MaterialId" asp-items="materials" class="form-control"></select>
+        <span asp-validation-for="MaterialId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SupplierId"></label>
+        <select asp-for="SupplierId" asp-items="suppliers" class="form-control"></select>
+        <span asp-validation-for="SupplierId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MinimumQuantityPerOrder"></label>
+        <input asp-for="MinimumQuantityPerOrder" class="form-control" />
+        <span asp-validation-for="MinimumQuantityPerOrder" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="UnitPrice"></label>
+        <input asp-for="UnitPrice" class="form-control" />
+        <span asp-validation-for="UnitPrice" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

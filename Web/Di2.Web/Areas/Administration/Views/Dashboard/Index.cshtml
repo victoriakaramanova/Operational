@@ -1,0 +1,24 @@
+﻿@model Di2.Web.ViewModels.Administration.Dashboard.IndexViewModel
+@{
+    this.ViewData["Title"] = "Admin dashboard";
+}
+
+<h1>@this.ViewData["Title"]</h1>
+<div class="row-cols-3">
+    <a href="@this.Model.CreateSubCategoryPath">Създаване на подкатегория</a>Текущо: @Model.SubCategoriesCount <a href="@Model.ViewAllSubCategories">Преглед </a>
+</div>
+<div class="row-cols-3">
+    <a href="@this.Model.CreateSupplierPath">Създаване на доставчик</a>Текущо: @Model.SuppliersCount <a href="@Model.ViewAllSuppliersPath">Преглед </a>
+</div>
+<div class="row-cols-3">
+    <a href="@this.Model.CreateMaterialPath">Създаване на материал</a>Текущо: @Model.MaterialsCount <a href="@Model.ViewAllMaterialsPath">Преглед </a>
+</div>
+<div class="row-cols-3">
+    <a href="@this.Model.CreatePriceListPath">Създаване на ценова оферта към доставчик</a>Текущо: @Model.PriceListsCount <a href="@Model.ViewAllPriceListsPath">Преглед </a>
+</div>
+<div class="row-cols-3">
+    <a href="@this.Model.CreateOrderSupplierPath">Изпращане на поръчка към доставчик</a>Още недоставени: @Model.OrderSuppliersCount <a href="@Model.ViewAllOrderSuppliersPath">Преглед </a>
+</div>
+<div class="row-cols-3">
+    <a href="@this.Model.ViewAllOrders">Всички поръчки от клиенти</a> <a href="@this.Model.ViewAllSentOrders"> Изпратени към теб поръчки от клиенти </a> Които правиш сега: @Model.OrdersCount <a href="@Model.ViewAllCreatedOrdersPath">Създадени от клиентите поръчки</a>
+</div>

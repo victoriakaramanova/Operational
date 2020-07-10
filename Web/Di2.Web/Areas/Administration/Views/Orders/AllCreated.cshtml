@@ -1,0 +1,80 @@
+﻿@using Di2.Web.ViewModels.Orders.ViewModels
+@model OrdersViewModel
+@{
+    ViewData["Title"] = "Общо незавършени поръчки";
+}
+
+@if (Model.Orders.Count == 0)
+{
+    <h3 class="text-center text-primary">Няма поръчки</h3>
+}
+
+else
+{
+    <div id="orders" class="text-dark">
+        <div class="row mt-1">
+            <div class="col-md-2 text-left">Продукт</div>
+            <div class="col-md-1 text-left">Брой</div>
+            <div class="col-md-1 text-left">Единична цена</div>
+            <div class="col-md-1 text-left">Крайна цена</div>
+            <div class="col-md-2 text-left">Издадена</div>
+            <div class="col-md-2 text-left">Клиент</div>
+            <div class="col-md-1 text-left">Поръчка №</div>
+            <div class="col-md-1 text-left">Шаблон</div>
+        </div>
+    </div>
+
+    <form asp-controller="Orders" asp-action="Complete" method="post">
+        @for (int i = 0; i < Model.Orders.Count; i++)
+        {
+            <input type="hidden" asp-for="@this.Model.Orders[i].Id" />
+            <div class="order row">
+                <div class="col-md-2 text-left">@Model.Orders[i].MaterialName</div>
+                <div class="col-md-1 text-left">
+                    <input type="number" asp-for="@Model.Orders[i].Quantity" style="border:none; padding:2px;width:100%;background-color: rgba(70, 35, 122, 0.03)" onchange="sendQty()" />
+                    <span asp-validation-for="@Model.Orders[i].Quantity" class="text-danger"></span>
+                </div>
+                <div class="col-md-1 text-left">@Model.Orders[i].AvgPrice</div>
+                <div class="col-md-1 text-left" style="text-align:left">@Model.Orders[i].TotalPrice</div>
+                <div class="col-md-2 text-left">@Model.Orders[i].IssuedOn</div>
+                <div class="col-md-2 text-left">@Model.Orders[i].Orderer.UserName</div>
+                <div class="col-md-1 text-left">@Model.Orders[i].Id</div>
+                @foreach (var pic in @Model.Orders[i].Pictures)
+                {
+                    <div class="col-md-1 text-left">
+                        <img class="img-thumbnail product-cart-image"
+                             src="@pic.Url" />
+                    </div>
+                }
+            </div>
+            <input type="text" asp-for="@Model.DeliveryAddress" class="w-auto" value="@Model.Orders.Select(x=>x.Orderer.Address).FirstOrDefault()" />
+        }
+        <hr class="hr-4 bg-info" />
+        <input type="submit" class="btn btn-primary" value="Поръчай" />
+    </form>
+
+    <hr class="hr-2 bg-light">
+
+    <h2 class="text-dark text-right" id="total-price">ОБЩО: @Model.Orders.Sum(x => x.AvgPrice * (decimal)x.Quantity).ToString("F2")</h2>
+    @*</div>*@
+}
+
+@section Scripts {
+    <script>
+        function sendQty() {
+            let bigTotal = 0;
+            let current = 0;
+            debugger;
+            let orders = Array.from($('.order'));
+            for (let order of orders) {
+                current = 0;
+                let domUnitPrice = +$($(order).children()[2]).text();
+                let domQty = $($($(order).children()[1]).children()[0]).val();
+                current = +domQty * +domUnitPrice;
+                bigTotal += current;
+                +$($(order).children()[3]).text(current.toFixed(2));
+            }
+            $('#total-price').text('ОБЩО: ' + bigTotal.toFixed(2));
+        }
+    </script>
+}

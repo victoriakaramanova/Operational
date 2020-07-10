@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.10.0" />
+    <!--<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />-->
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Data\Di2.Data.Common\Di2.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\Di2.Data.Models\Di2.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Di2.Common\Di2.Common.csproj" />
+    <ProjectReference Include="..\..\Web\Di2.Web.ViewModels\Di2.Web.ViewModels.csproj" />
+    <ProjectReference Include="..\Di2.Services.Mapping\Di2.Services.Mapping.csproj" />
+    <ProjectReference Include="..\Di2.Services.Messaging\Di2.Services.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

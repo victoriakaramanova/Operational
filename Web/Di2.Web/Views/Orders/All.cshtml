@@ -1,0 +1,106 @@
+﻿@using Di2.Web.ViewModels.Orders.ViewModels
+@model OrdersViewModel
+@{
+    ViewData["Title"] = "Общо поръчки";
+}
+
+<style>
+    form {
+        color: rgba(70, 35, 122, 1);
+    }
+
+    input {
+        /*position: absolute;*/
+        display: block;
+        top: 0;
+        left: 0;
+        margin: 0;
+        height: auto;
+        width: auto;
+        border: none;
+        border-color: rgba(252, 252, 252, 1);
+        border-radius: 5%;
+        padding: 1px;
+        box-sizing: border-box;
+        text-align: right;
+    }
+</style>
+
+@if (Model.Orders.Count == 0)
+{
+    <h3 class="text-center text-primary">Нямате поръчки</h3>
+}
+
+else
+{
+    <div id="orders" class="text-dark">
+        <div class="row mt-1">
+            <h4 class="col-md-1 text-left">#</h4>
+            <h4 class="col-md-2 text-left">Снимка</h4>
+            <h4 class="col-md-1 text-left">Продукт</h4>
+            <h4 class="col-md-1 text-left">Брой</h4>
+            <h4 class="col-md-1 text-left">Единична цена</h4>
+            <h4 class="col-md-1 text-left">Крайна цена</h4>
+            <h4 class="col-md-3 text-left">Шаблон</h4>
+        </div>
+        <hr class="hr-2 bg-light">
+        <form asp-controller="Orders" asp-action="Complete" method="post">
+            @for (int i = 0; i < Model.Orders.Count; i++)
+            {
+                <input type="hidden" asp-for="@this.Model.Orders[i].Id" />
+                <div class="order row">
+                    <h6 class="col-md-1 text-left">@(i + 1)</h6>
+                    <div class="col-md-2 text-left">
+                        <img class="img-thumbnail product-cart-image"
+                             src="@Model.Orders[i].Image" />
+                    </div>
+                    <h6 class="col-md-1 text-left">
+                        @Model.Orders[i].MaterialName
+                    </h6>
+                    <h6 class="col-md-1 text-left">
+                        <input type="number" asp-for="@Model.Orders[i].Quantity" style="border:none; width:100%;background-color: rgba(70, 35, 122, 0.1)" onchange="sendQty()" />
+                        <span asp-validation-for="@Model.Orders[i].Quantity" class="text-danger"></span>
+                    </h6>
+                    <h6 class="col-md-1 text-left">@Model.Orders[i].AvgPrice</h6>
+                    <h6 class="col-md-1 text-left">
+                        <input type="number" asp-for="@Model.Orders[i].TotalPrice" readonly="readonly" style="text-align:left" />
+                        <span asp-validation-for="@Model.Orders[i].TotalPrice" class="text-danger"></span>
+                    </h6>
+                    @foreach (var pic in @Model.Orders[i].Pictures)
+                    {
+                        <div class="col-md-@Math.Max(@Model.Orders[i].Pictures.Count,3) text-left">
+                            <img class="img-thumbnail product-cart-image"
+                                 src="@pic.Url" />
+                        </div>
+                    }
+                </div>
+            }
+            <hr class="hr-4 bg-info" />
+            <div class="col-md-2 text-left">Адрес за получаане</div>
+                <input type="text" asp-for="@Model.DeliveryAddress" class="w-auto" value="@Model.Orders.Select(x=>x.Orderer.Address).FirstOrDefault()" />
+        <h2 class="text-dark text-right" id="total-price">ОБЩО: @Model.Orders.Sum(x => x.AvgPrice * (decimal)x.Quantity).ToString("F2")</h2>
+
+                <input type="submit" class="btn btn-primary" value="Поръчай" />
+        </form>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function sendQty() {
+            let bigTotal = 0;
+            let current = 0;
+            debugger;
+            let orders = Array.from($('.order'));
+            for (let order of orders) {
+                current = 0;
+                let domUnitPrice = +$($(order).children()[4]).text();
+                let domQty = $($($(order).children()[3]).children()[0]).val();
+                current = +domQty * +domUnitPrice;
+                bigTotal += current;
+                +$($(order).children()[5]).text(current.toFixed(2));
+            }
+            $('#total-price').text('ОБЩО: ' + bigTotal.toFixed(2));
+        }
+    </script>
+}

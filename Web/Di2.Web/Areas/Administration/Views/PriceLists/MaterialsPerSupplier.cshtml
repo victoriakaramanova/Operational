@@ -1,0 +1,24 @@
+﻿@model Di2.Web.ViewModels.PriceLists.ViewModels.MaterialsPerSupplierViewModel
+@{
+    this.ViewData["Title"] = Model.Supplier;
+}
+
+@foreach (var material in Model.Materials)
+{
+    <div class="media-body">
+        <h4 class="media-heading">@material.Name</h4>
+        <p>@material.Description</p>
+        <ul class="list-inline list-unstyled text-right">
+            <li class="list-inline-item">
+                <i class="fas fa-user-edit"></i> @material.ExtraInfo
+            </li>
+            <li class="list-inline-item">
+                <i class="fas fa-calendar-alt"></i> @material.SubCategoryName
+            </li>
+            @*<li class="list-inline-item">
+                <i class="fas fa-comment-dots"></i> @material.SubCategory.Category.Name
+            </li>*@
+        </ul>
+    </div>
+}
+
